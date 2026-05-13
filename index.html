@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>SIG Kampus III UNKHAIR - Mobile Ready</title>
+    <title>SIG Kampus III UNKHAIR</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -25,7 +20,7 @@
             width: 100%;
         }
 
-        /* Header mobile friendly */
+        /* ---- HEADER ---- */
         .header {
             background: linear-gradient(135deg, #0f3b2c, #0a281c);
             color: white;
@@ -38,247 +33,283 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             z-index: 10;
         }
+        .header-left { display:flex; align-items:center; gap:10px; }
+        .header h1 { font-size:1rem; font-weight:600; letter-spacing:-0.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .header-buttons { display:flex; gap:6px; flex-wrap:wrap; }
 
-        .header h1 {
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .sidebar-toggle-btn {
+            background: rgba(255,255,255,0.15);
+            border: none; color: white;
+            width: 36px; height: 36px;
+            border-radius: 10px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; transition: background 0.2s; flex-shrink: 0;
         }
+        .sidebar-toggle-btn:hover { background: rgba(255,255,255,0.28); }
 
-        .header-buttons {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(2px);
-            color: white;
-        }
-
-        .btn-primary { background: #ff9800; color: #1e2a1c; }
-        .btn-primary:hover { background: #f57c00; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-success { background: #2ecc71; color: #1e2a1c; }
-        .btn-warning { background: #f1c40f; color: #1e2a1c; }
-        .btn-info { background: #3498db; color: white; }
-        
-        .btn-sm {
-            padding: 4px 8px;
-            font-size: 0.65rem;
-        }
-
-        /* Main container mobile: sidebar bisa geser */
-        .main-container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
+        /* ---- SEARCH BAR ---- */
+        .search-bar-wrap {
+            background: linear-gradient(135deg, #0f3b2c, #0a281c);
+            padding: 0 16px 12px;
             position: relative;
+            z-index: 10;
         }
-
-        /* Sidebar - bentuk slide up/down di mobile? tapi tetap sidebar dengan lebar nyaman */
-        .sidebar {
-            width: 75%;
-            max-width: 340px;
-            background: #f8fafc;
-            border-right: 1px solid #dce4ec;
+        .search-bar-inner {
             display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            box-shadow: 2px 0 12px rgba(0,0,0,0.05);
-            z-index: 5;
-            transition: transform 0.2s ease;
-        }
-
-        /* map mengambil sisa space */
-        #map {
-            flex: 1;
-            height: 100%;
-            background: #cbd5e1;
-        }
-
-        /* Tab buttons */
-        .tab-buttons {
-            display: flex;
-            background: white;
-            border-bottom: 1px solid #d1d9e6;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: #f1f5f9;
-            border: none;
-            transition: 0.2s;
-            color: #2c3e50;
-        }
-
-        .tab-btn.active {
-            background: #0f3b2c;
-            color: white;
-            border-bottom: 2px solid #ff9800;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 16px 12px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: #1e2a3a;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            background: white;
-            font-family: inherit;
-        }
-
-        .list-item {
-            background: white;
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            cursor: pointer;
-            transition: 0.1s;
-            border-left: 4px solid #3498db;
-        }
-
-        .list-item-title {
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: #0f3b2c;
-        }
-
-        .list-item-sub {
-            font-size: 0.7rem;
-            color: #5b6e8c;
-            margin-top: 4px;
-        }
-
-        .list-item-actions {
-            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 40px;
+            padding: 0 14px;
             gap: 8px;
-            margin-top: 10px;
+            transition: background 0.2s;
         }
-
-        .coord-info {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            background: rgba(0,0,0,0.75);
-            backdrop-filter: blur(8px);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 40px;
-            font-size: 0.65rem;
-            text-align: center;
-            z-index: 1000;
-            pointer-events: none;
-            font-weight: 500;
+        .search-bar-inner:focus-within {
+            background: rgba(255,255,255,0.2);
+            border-color: #ff9800;
         }
-
-        .draw-mode {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #ff9800;
-            color: #1e2a1c;
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-weight: bold;
-            font-size: 0.7rem;
-            z-index: 1001;
-            display: none;
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            pointer-events: none;
-        }
-
-        .legend {
-            display: none; /* hide on mobile to save space, but can tap? keep minimal */
-        }
-        
-        /* floating hint */
-        .footer {
-            display: none;
-        }
-        
-        @media (max-width: 700px) {
-            .sidebar {
-                width: 85%;
-                max-width: 300px;
-            }
-            .btn {
-                padding: 5px 10px;
-                font-size: 0.65rem;
-            }
-            .header h1 {
-                font-size: 0.8rem;
-            }
-        }
-        
-        /* tiny custom marker */
-        .custom-marker {
+        .search-icon { color: rgba(255,255,255,0.6); font-size: 1rem; flex-shrink:0; }
+        #searchInput {
+            flex: 1;
             background: transparent;
             border: none;
+            outline: none;
+            color: white;
+            font-size: 0.85rem;
+            padding: 10px 0;
+            font-family: inherit;
         }
-        
-        button:active {
-            transform: scale(0.96);
+        #searchInput::placeholder { color: rgba(255,255,255,0.45); }
+        .search-clear-btn {
+            background: none; border: none; color: rgba(255,255,255,0.5);
+            font-size: 1rem; cursor: pointer; padding: 0 2px; flex-shrink:0;
+            display: none;
         }
-        
-        .history-item {
-            background: #fef7e0;
-            border-radius: 14px;
-            padding: 10px;
-            margin-bottom: 8px;
-            font-size: 0.7rem;
-            border-left: 3px solid #ff9800;
+        .search-clear-btn.visible { display: block; }
+
+        /* ---- SEARCH RESULTS DROPDOWN ---- */
+        .search-results-overlay {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 16px; right: 16px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            z-index: 999;
+            max-height: 60vh;
+            overflow-y: auto;
+            display: none;
         }
+        .search-results-overlay.visible { display: block; }
+        .search-result-header {
+            padding: 10px 14px 6px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #888;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .search-result-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.15s;
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover { background: #f0f8f0; }
+        .search-result-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0; margin-top: 2px;
+            color: white;
+        }
+        .search-result-body { flex: 1; min-width: 0; }
+        .search-result-name {
+            font-weight: 700; font-size: 0.85rem; color: #0f3b2c;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .search-result-name mark {
+            background: #fff3c4; color: #0f3b2c; border-radius: 3px; padding: 0 2px;
+        }
+        .search-result-meta { font-size: 0.68rem; color: #666; margin-top: 2px; }
+        .search-result-badge {
+            font-size: 0.6rem; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+            color: white; white-space: nowrap; align-self: flex-start; margin-top: 4px;
+            flex-shrink: 0;
+        }
+        .search-no-result {
+            padding: 20px 14px;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        /* ---- DETAIL PANEL (popup di peta) ---- */
+        .detail-panel {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(92vw, 380px);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+            z-index: 1002;
+            display: none;
+            overflow: hidden;
+        }
+        .detail-panel.visible { display: block; }
+        .detail-panel-header {
+            padding: 14px 16px 10px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .detail-panel-title { font-weight: 800; font-size: 1rem; color: #0f3b2c; flex:1; }
+        .detail-panel-close {
+            background: #f0f0f0; border: none; border-radius: 50%;
+            width: 28px; height: 28px; cursor: pointer; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .detail-panel-badge {
+            display: inline-block; font-size: 0.65rem; font-weight: 700;
+            padding: 3px 10px; border-radius: 20px; color: white; margin-bottom: 8px;
+            margin-left: 16px;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 0 16px 14px;
+        }
+        .detail-cell {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+        .detail-cell.full { grid-column: 1 / -1; }
+        .detail-label { font-size: 0.62rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.4px; }
+        .detail-value { font-size: 0.8rem; font-weight: 600; color: #1e2a3a; margin-top: 3px; word-break: break-word; }
+        .detail-actions {
+            display: flex; gap: 8px; padding: 0 16px 16px;
+        }
+
+        /* ---- BUTTONS ---- */
+        .btn {
+            padding: 6px 12px; border: none; border-radius: 40px;
+            font-weight: 600; font-size: 0.7rem; cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(2px); color: white;
+        }
+        .btn-primary  { background:#ff9800; color:#1e2a1c; }
+        .btn-primary:hover { background:#f57c00; }
+        .btn-danger   { background:#e74c3c; color:white; }
+        .btn-success  { background:#2ecc71; color:#1e2a1c; }
+        .btn-warning  { background:#f1c40f; color:#1e2a1c; }
+        .btn-info     { background:#3498db; color:white; }
+        .btn-sm       { padding:4px 8px; font-size:0.65rem; }
+        button:active { transform:scale(0.96); }
+
+        /* ---- LAYOUT ---- */
+        .main-container { display:flex; flex:1; overflow:hidden; position:relative; }
+
+        /* ---- SIDEBAR ---- */
+        .sidebar {
+            width: 75%; max-width: 340px;
+            background: #f8fafc; border-right: 1px solid #dce4ec;
+            display: flex; flex-direction: column; overflow-y: auto;
+            box-shadow: 2px 0 12px rgba(0,0,0,0.05); z-index: 5;
+            transition: transform 0.28s cubic-bezier(.4,0,.2,1), width 0.28s cubic-bezier(.4,0,.2,1);
+        }
+        .sidebar.collapsed { transform:translateX(-100%); width:0; min-width:0; overflow:hidden; border-right:none; }
+
+        .sidebar-overlay { display:none; position:absolute; inset:0; background:rgba(0,0,0,0.25); z-index:4; }
+        .sidebar-overlay.visible { display:block; }
+
+        /* ---- MAP ---- */
+        #map { flex:1; height:100%; background:#cbd5e1; }
+
+        /* ---- TABS ---- */
+        .tab-buttons { display:flex; background:white; border-bottom:1px solid #d1d9e6; position:sticky; top:0; z-index:2; }
+        .tab-btn { flex:1; padding:12px 4px; font-size:0.75rem; font-weight:600; background:#f1f5f9; border:none; transition:0.2s; color:#2c3e50; cursor:pointer; }
+        .tab-btn.active { background:#0f3b2c; color:white; border-bottom:2px solid #ff9800; }
+        .tab-content { display:none; padding:16px 12px; overflow-y:auto; flex:1; }
+        .tab-content.active { display:block; }
+
+        /* ---- FORM ---- */
+        .form-group { margin-bottom:14px; }
+        .form-group label { display:block; font-size:0.7rem; font-weight:700; margin-bottom:4px; color:#1e2a3a; }
+        .form-group input, .form-group select, .form-group textarea {
+            width:100%; padding:10px 12px; border:1px solid #cbd5e1;
+            border-radius:12px; font-size:0.8rem; background:white; font-family:inherit;
+        }
+
+        /* ---- LIST ITEMS ---- */
+        .list-item { background:white; border-radius:16px; padding:12px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.08); cursor:pointer; transition:0.1s; border-left:4px solid #3498db; }
+        .list-item-title { font-weight:700; font-size:0.85rem; color:#0f3b2c; }
+        .list-item-sub { font-size:0.7rem; color:#5b6e8c; margin-top:4px; }
+        .list-item-actions { display:flex; gap:8px; margin-top:10px; }
+
+        /* ---- HISTORY ---- */
+        .history-item { background:#fef7e0; border-radius:14px; padding:10px; margin-bottom:8px; font-size:0.7rem; border-left:3px solid #ff9800; }
+
+        /* ---- FLOATING OVERLAYS ---- */
+        .coord-info {
+            position:absolute; bottom:16px; left:16px; right:16px;
+            background:rgba(0,0,0,0.75); backdrop-filter:blur(8px);
+            color:white; padding:8px 12px; border-radius:40px;
+            font-size:0.65rem; text-align:center; z-index:1000;
+            pointer-events:none; font-weight:500;
+        }
+        .draw-mode {
+            position:absolute; top:10px; left:50%; transform:translateX(-50%);
+            background:#ff9800; color:#1e2a1c;
+            padding:6px 14px; border-radius:40px;
+            font-weight:bold; font-size:0.7rem; z-index:1001;
+            display:none; align-items:center; gap:8px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.2);
+            flex-wrap:wrap; max-width:90vw;
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width:700px) {
+            .sidebar { width:85%; max-width:300px; }
+            .btn { padding:5px 10px; font-size:0.65rem; }
+            .header h1 { font-size:0.8rem; }
+        }
+
+        .custom-marker { background:transparent; border:none; }
+        .legend { display:none; }
+        .footer { display:none; }
+
+        /* ---- HIGHLIGHT MARKER PULSE ---- */
+        @keyframes pulse-ring {
+            0%   { transform:scale(1); opacity:1; }
+            100% { transform:scale(2.4); opacity:0; }
+        }
+        .marker-highlight::after {
+            content:'';
+            position:absolute;
+            top:0; left:0; right:0; bottom:0;
+            border-radius:50%;
+            border:3px solid #ff9800;
+            animation: pulse-ring 1s ease-out infinite;
+        }
+        .marker-highlight { position:relative; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>🗺️ SIG Kampus III UNKHAIR</h1>
+    <div class="header-left">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle Sidebar">☰</button>
+        <h1>🗺️ SIG Kampus III UNKHAIR</h1>
+    </div>
     <div class="header-buttons">
         <button class="btn btn-primary" onclick="exportData()">📥 Export</button>
         <button class="btn btn-info" onclick="importData()">📤 Import</button>
@@ -286,15 +317,37 @@
     </div>
 </div>
 
+<!-- SEARCH BAR -->
+<div class="search-bar-wrap" id="searchBarWrap">
+    <div class="search-bar-inner">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari bangunan, fungsi, atau pengelola..." autocomplete="off" />
+        <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" title="Hapus pencarian">✕</button>
+    </div>
+    <div class="search-results-overlay" id="searchResultsOverlay"></div>
+</div>
+
+<!-- DETAIL PANEL (floating di atas peta) -->
+<div class="detail-panel" id="detailPanel">
+    <div class="detail-panel-header">
+        <div class="detail-panel-title" id="detailTitle">—</div>
+        <button class="detail-panel-close" onclick="closeDetailPanel()">✕</button>
+    </div>
+    <span class="detail-panel-badge" id="detailBadge"></span>
+    <div class="detail-grid" id="detailGrid"></div>
+    <div class="detail-actions" id="detailActions"></div>
+</div>
+
 <div class="main-container">
-    <div class="sidebar">
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
         <div class="tab-buttons">
             <button class="tab-btn active" onclick="switchTab('bangunan')">🏢 Bangunan</button>
             <button class="tab-btn" onclick="switchTab('jalan')">🛣️ Jalan</button>
             <button class="tab-btn" onclick="switchTab('zona')">🗺️ Zona</button>
             <button class="tab-btn" onclick="switchTab('history')">📜 History</button>
         </div>
-        
+
         <!-- Tab Bangunan -->
         <div id="tab-bangunan" class="tab-content active">
             <h3 style="font-size:0.9rem; margin-bottom:12px;">➕ Tambah/Edit Bangunan</h3>
@@ -325,23 +378,25 @@
             <h3 style="font-size:0.85rem;">📋 Daftar Bangunan</h3>
             <div id="bangunanList"></div>
         </div>
-        
+
         <!-- Tab Jalan -->
         <div id="tab-jalan" class="tab-content">
             <h3 style="font-size:0.9rem;">➕ Tambah Jalan</h3>
             <div class="form-group"><label>Nama Jalan</label><input type="text" id="jalan_nama" placeholder="Jalan Utama"></div>
-            <div class="form-group"><label>Koordinat (LineString)</label><textarea id="jalan_koordinat" rows="2" placeholder="[[lat,lng],[lat,lng]]"></textarea></div>
-            <button class="btn btn-primary" onclick="startDrawLine()">✏️ Gambar Jalan di Peta</button>
-            <button class="btn btn-danger" onclick="cancelDrawing()">❌ Batal</button>
-            <button class="btn btn-success" style="margin-top:12px; width:100%;" onclick="saveJalan()">💾 Simpan Jalan</button>
+            <div class="form-group"><label>Koordinat (otomatis terisi setelah gambar)</label><textarea id="jalan_koordinat" rows="3" placeholder="Klik ✏️ Gambar Jalan lalu klik titik-titik di peta"></textarea></div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                <button class="btn btn-primary" onclick="startDrawLine()">✏️ Gambar Jalan</button>
+                <button class="btn btn-danger" onclick="cancelDrawing()">❌ Batal Gambar</button>
+            </div>
+            <button class="btn btn-success" style="width:100%;" onclick="saveJalan()">💾 Simpan Jalan</button>
             <hr style="margin:16px 0;">
             <h3>🛣️ Daftar Jalan</h3>
             <div id="jalanList"></div>
         </div>
-        
+
         <!-- Tab Zona -->
         <div id="tab-zona" class="tab-content">
-            <h3 style="font-size:0.9rem;">➕ Tambah Zona (Nested)</h3>
+            <h3 style="font-size:0.9rem;">➕ Tambah Zona</h3>
             <div class="form-group"><label>Nama Zona</label><input type="text" id="zona_nama" placeholder="Zona Akademik"></div>
             <div class="form-group"><label>Jenis Zona</label>
                 <select id="zona_jenis">
@@ -355,15 +410,17 @@
             <div class="form-group"><label>Zona Induk (opsional)</label>
                 <select id="zona_parent"><option value="">-- Zona Utama --</option></select>
             </div>
-            <div class="form-group"><label>Koordinat Polygon</label><textarea id="zona_koordinat" rows="2" placeholder="[[lat,lng],[lat,lng]]"></textarea></div>
-            <button class="btn btn-primary" onclick="startDrawPolygon()">✏️ Gambar Zona di Peta</button>
-            <button class="btn btn-danger" onclick="cancelDrawing()">❌ Batal</button>
-            <button class="btn btn-success" style="margin-top:12px; width:100%;" onclick="saveZona()">💾 Simpan Zona</button>
+            <div class="form-group"><label>Koordinat (otomatis terisi setelah gambar)</label><textarea id="zona_koordinat" rows="3" placeholder="Klik ✏️ Gambar Zona lalu klik titik-titik di peta"></textarea></div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                <button class="btn btn-primary" onclick="startDrawPolygon()">✏️ Gambar Zona</button>
+                <button class="btn btn-danger" onclick="cancelDrawing()">❌ Batal Gambar</button>
+            </div>
+            <button class="btn btn-success" style="width:100%;" onclick="saveZona()">💾 Simpan Zona</button>
             <hr style="margin:16px 0;">
             <h3>🗺️ Hierarki Zona</h3>
             <div id="zonaList"></div>
         </div>
-        
+
         <!-- Tab History -->
         <div id="tab-history" class="tab-content">
             <h3 style="font-size:0.9rem;">📜 Riwayat Perubahan</h3>
@@ -372,297 +429,730 @@
             <button class="btn btn-success" style="margin-top:12px;" onclick="exportHistory()">📥 Export History</button>
         </div>
     </div>
+
     <div id="map"></div>
 </div>
+
 <div class="coord-info" id="coordInfo">📍 Klik peta untuk isi koordinat bangunan</div>
-<div class="draw-mode" id="drawModeIndicator">✏️ Mode Gambar Aktif — Klik untuk titik, Double klik selesai</div>
+<div class="draw-mode" id="drawModeIndicator"></div>
 
 <script>
-    // ---------- INDEXED DB FULL CRUD ----------
-    const DB_NAME = 'SIG_Kampus_Unkhair_Mobile';
-    const DB_VERSION = 5;
-    let db;
-    let map;
-    let drawingMode = null;
-    let drawingPoints = [];
-    let tempLayer = null;
-    let buildingMarkers = [];
-    let roadLines = [];
-    let zonePolygons = [];
+// ============================================================
+// DATA DEFAULT
+// ============================================================
+const DEFAULT_DATA = {
+    bangunan: [
+        {"id":"b1","nama":"Kampus III UNKHAIR (Pusat)","fungsi":"Pusat Kampus","jenis":"perkuliahan","kapasitas":1000,"inventaris":"Gedung utama, ruang kuliah","pengelola":"Rektorat","latitude":0.77602035747594,"longitude":127.37435889881644},
+        {"id":"b1778490954125","nama":"404 Kofi","fungsi":"UMKM Mahasiswa Informatika","jenis":"fasilitas","kapasitas":50,"inventaris":"","pengelola":"Alumni Informatika ( Ka As) ","latitude":0.7760897,"longitude":127.37445017},
+        {"id":"b1778490993002","nama":"Lab MUGIS","fungsi":"Perkuliahan","jenis":"laboratorium","kapasitas":50,"inventaris":"","pengelola":"Kepala Lab MUGIS","latitude":0.77591406,"longitude":127.37403318},
+        {"id":"b1778491071716","nama":"Lab Jak","fungsi":"Perkuliahan","jenis":"laboratorium","kapasitas":50,"inventaris":"","pengelola":"Kepala Lab JAK","latitude":0.77583878,"longitude":127.37416524},
+        {"id":"b1778491111307","nama":"Lab RPL","fungsi":"Perkuliahan","jenis":"laboratorium","kapasitas":50,"inventaris":"","pengelola":"Kepala Lab RPL","latitude":0.77576309,"longitude":127.37432081},
+        {"id":"b1778491183920","nama":"Ruang Kepala Lab RPL","fungsi":"Administrasi","jenis":"administrasi","kapasitas":5,"inventaris":"","pengelola":"Kepala Lab RPL","latitude":0.77576303,"longitude":127.37424285},
+        {"id":"b1778491224911","nama":"Ruang Kepala Lab JAK","fungsi":"Administrasi","jenis":"administrasi","kapasitas":5,"inventaris":"","pengelola":"Kepala Lab Jak","latitude":0.77579873,"longitude":127.37417266},
+        {"id":"b1778491326316","nama":"Sekretariatan HMTI","fungsi":"Kegiatan Mahasiswa","jenis":"administrasi","kapasitas":1000,"inventaris":"","pengelola":"Kepala Bidang Kesekretariatan","latitude":0.77584434,"longitude":127.37446904},
+        {"id":"b1778491381195","nama":"Ruangan Administrasi HMTI","fungsi":"Administrasi Penyuratan","jenis":"administrasi","kapasitas":5,"inventaris":"","pengelola":"Sekretaris Umum HMTI","latitude":0.7757814,"longitude":127.37447038},
+        {"id":"b1778491502030","nama":"Tata Usaha, Ruang Prodi Lama","fungsi":"","jenis":"administrasi","kapasitas":5,"inventaris":"","pengelola":"Kepala Tata Usaha, Kaprodi","latitude":0.77590094,"longitude":127.3744867},
+        {"id":"b1778491553971","nama":"Server, Riset","fungsi":"Pengelolaan data","jenis":"administrasi","kapasitas":5,"inventaris":"","pengelola":"Kepala Server, Kaprodi","latitude":0.77586978,"longitude":127.37453733},
+        {"id":"b1778491697579","nama":"Ruang Sidang","fungsi":"Perkuliahan Sidang","jenis":"perkuliahan","kapasitas":55,"inventaris":"","pengelola":"Dosen Informatika","latitude":0.7759785,"longitude":127.37458706},
+        {"id":"b1778491853977","nama":"JT-01","fungsi":"Perkuliahan","jenis":"perkuliahan","kapasitas":50,"inventaris":"","pengelola":"Dekan & Dosen Informatika","latitude":0.77624225,"longitude":127.37433627},
+        {"id":"b1778491898182","nama":"JT-02","fungsi":"Perkuliahan","jenis":"perkuliahan","kapasitas":50,"inventaris":"","pengelola":"Dekan & Dosen Informatika","latitude":0.77618334,"longitude":127.37428129},
+        {"id":"b1778491978239","nama":"JT-03","fungsi":"Perkuliahan","jenis":"perkuliahan","kapasitas":50,"inventaris":"","pengelola":"Dekan & Dosen Informatika","latitude":0.7761031,"longitude":127.37422541},
+        {"id":"b1778491998547","nama":"JT-04","fungsi":"Perkuliahan","jenis":"perkuliahan","kapasitas":50,"inventaris":"","pengelola":"Dekan & Dosen Informatika","latitude":0.77603416,"longitude":127.37416707},
+        {"id":"b1778492025454","nama":"JT-05","fungsi":"Perkuliahan","jenis":"perkuliahan","kapasitas":50,"inventaris":"","pengelola":"Dekan & Dosen Informatika","latitude":0.77596374,"longitude":127.37410963},
+        {"id":"b2","nama":"Lab RPL","fungsi":"Laboratorium","jenis":"laboratorium","kapasitas":90,"inventaris":"PC, server","pengelola":"Kepala Lab RISET","latitude":0.77581481,"longitude":127.37422362},
+        {"id":"b3","nama":"JT-06","fungsi":"Perkuliahan","jenis":"perkuliahan","kapasitas":200,"inventaris":"Ruang kelas","pengelola":"Fakultas Teknik","latitude":0.7758938766063236,"longitude":127.37411189661997},
+        {"id":"b4","nama":"Program Studi Informatika, Ruang Kaprodi","fungsi":"Administrasi","jenis":"administrasi","kapasitas":100,"inventaris":"","pengelola":"Dekan & Kaprodi","latitude":0.7760048873056522,"longitude":127.37453274739794},
+        {"id":"b5","nama":"Kantin Kampus III","fungsi":"Kantin","jenis":"fasilitas","kapasitas":80,"inventaris":"Meja kursi","pengelola":"Pengelola","latitude":0.7758394608043214,"longitude":127.3744049784152}
+    ],
+    jalan: [
+        {"id":"j1778492622411","nama":"Jalan Kampus III Universitas Khairun","koordinat":[[0.7764518562507153,127.37459778785707],[0.7759452668243263,127.37423032522203],[0.775886298739,127.37433090806009],[0.7759881527040315,127.37444624304774]]}
+    ],
+    zona: [
+        {"id":"z1778492870612","nama":"Perpohonan","jenis":"hijau","parentId":null,"koordinat":[[0.7761883970956162,127.37444875942592],[0.7762152248004959,127.37442060574618],[0.7759201200373415,127.3741752665367],[0.7758973164866022,127.37420073891363],[0.7761883970956162,127.37444875942592]]},
+        {"id":"z1778492934251","nama":"Perpohonan","jenis":"hijau","parentId":null,"koordinat":[[0.7759133799989966,127.37424219716242],[0.7758771625947742,127.37422476869399],[0.7758007036292885,127.37435078992725],[0.7758261899512867,127.37435883383574],[0.7759133799989966,127.37424219716242]]},
+        {"id":"z1778493055848","nama":"Tanaman","jenis":"hijau","parentId":null,"koordinat":[[0.7760515152279107,127.3745425465766],[0.7760568807690673,127.37451037094256],[0.7760099322836513,127.37448757986847],[0.7759924942746285,127.37450903029118],[0.7760515152279107,127.3745425465766]]},
+        {"id":"z1778493148225","nama":"Parkiran Dosen & Mahasiswa","jenis":"parkir","parentId":null,"koordinat":[[0.7760858953933469,127.37436669469604],[0.7759651707162996,127.37447662811232],[0.7758444460358173,127.3743640133932],[0.7759437085511262,127.37425139867409],[0.7760743183740199,127.3743709359457],[0.7760858953933469,127.37436669469604]]},
+        {"id":"z1778493419000","nama":"Parkiran Mahasiswa","jenis":"parkir","parentId":null,"koordinat":[[0.776449843244198,127.37457878630221],[0.776418991385267,127.37460157737634],[0.7758864614370306,127.37420206325383],[0.7759106063731576,127.37417525022546],[0.776449843244198,127.37457878630221]]},
+        {"id":"z1778493505955","nama":"Administrasi Program Studi","jenis":"administrasi","parentId":null,"koordinat":[[0.7760528877058412,127.37454390671088],[0.7760072806056859,127.3746283677502],[0.7758476557512489,127.37454390671088],[0.7758878973117489,127.3744621269744],[0.7760528877058412,127.37454390671088]]},
+        {"id":"z1778493584351","nama":"Administrasi HMTI","jenis":"administrasi","parentId":null,"koordinat":[[0.7758798001397669,127.37445376499696],[0.775844924120627,127.37453152277917],[0.7757657823837933,127.3744899625852],[0.7758046825597071,127.37441890806006],[0.7758798001397669,127.37445376499696]]},
+        {"id":"z1778493715595","nama":"Administrasi Lab Jak & Administrasi Lab RPL","jenis":"administrasi","parentId":null,"koordinat":[[0.7758182276486649,127.37414564398114],[0.7757659136190518,127.37426898391156],[0.7757283548281695,127.37425825870025],[0.7757833516289779,127.37413491876977],[0.7758182276486649,127.37414564398114]]},
+        {"id":"z1778493837875","nama":"Area Perkuliahan","jenis":"perkuliahan","parentId":null,"koordinat":[[0.7763050863042088,127.3743238930773],[0.776238017043091,127.3744056728138],[0.7759120604189191,127.37412949862171],[0.7759737641439438,127.3740517408395],[0.7763050863042088,127.3743238930773]]},
+        {"id":"z1778493882688","nama":"Area Perkuliahan","jenis":"perkuliahan","parentId":null,"koordinat":[[0.7759602961814269,127.37401288279048],[0.7758610336665124,127.373972663248],[0.7756826294108456,127.3743453643421],[0.775775185003058,127.37438960583889],[0.7759602961814269,127.37401288279048]]},
+        {"id":"z1778493960271","nama":"Gedung Program Studi Informatika","jenis":"perkuliahan","parentId":null,"koordinat":[[0.7760569025743014,127.37454374405169],[0.7760112954741841,127.374628205091],[0.7758463050784761,127.37454240340024],[0.7758865466389888,127.3744606236638],[0.7760569025743014,127.37454374405169]]},
+        {"id":"z1778494534893","nama":"Area Kampus III Universitas Khairun Kota Ternate","jenis":"batas","parentId":null,"koordinat":[[0.7762016490239562,127.37444056962256],[0.7761895765567387,127.37444995418248],[0.776130555605403,127.3744298444112],[0.7760608035709398,127.37454379978172],[0.7760098309296533,127.37463094212389],[0.775761674640872,127.374490173725],[0.7758005748168366,127.37441643789703],[0.7756811915170603,127.37434404272045],[0.7758636199288266,127.37396731967206],[0.7759642238290144,127.37401156116883],[0.776311670878644,127.37432259365704],[0.7762392360767003,127.37441241730205],[0.7764525163233145,127.37457999872926],[0.7764189816940533,127.37460278980338],[0.7762016490239562,127.37444056962256]]}
+    ]
+};
 
-    // DATA DEFAULT SESUAI FILE JSON YANG DISERAHKAN (sudah mencakup gedung, lab, kantin, dll)
-    const DEFAULT_DATA = {
-        bangunan: [
-            {"id": "b1","nama": "Kampus III UNKHAIR (Pusat)","fungsi": "Pusat Kampus","jenis": "perkuliahan","kapasitas": 1000,"inventaris": "Gedung utama, ruang kuliah","pengelola": "Rektorat","latitude": 0.77602035747594,"longitude": 127.37435889881644},
-            {"id": "b1778490954125","nama": "404 Kofi","fungsi": "UMKM Mahasiswa Informatika","jenis": "fasilitas","kapasitas": 50,"inventaris": "","pengelola": "Alumni Informatika ( Ka As) ","latitude": 0.7760897,"longitude": 127.37445017},
-            {"id": "b1778490993002","nama": "Lab MUGIS","fungsi": "Perkuliahan","jenis": "laboratorium","kapasitas": 50,"inventaris": "","pengelola": "Kepala Lab MUGIS","latitude": 0.77591406,"longitude": 127.37403318},
-            {"id": "b1778491071716","nama": "Lab Jak","fungsi": "Perkuliahan","jenis": "laboratorium","kapasitas": 50,"inventaris": "","pengelola": "Kepala Lab JAK","latitude": 0.77583878,"longitude": 127.37416524},
-            {"id": "b1778491111307","nama": "Lab RPL","fungsi": "Perkuliahan","jenis": "laboratorium","kapasitas": 50,"inventaris": "","pengelola": "Kepala Lab RPL","latitude": 0.77576309,"longitude": 127.37432081},
-            {"id": "b1778491183920","nama": "Ruang Kepala Lab RPL","fungsi": "Administrasi","jenis": "administrasi","kapasitas": 5,"inventaris": "","pengelola": "Kepala Lab RPL","latitude": 0.77576303,"longitude": 127.37424285},
-            {"id": "b1778491224911","nama": "Ruang Kepala Lab JAK","fungsi": "Administrasi","jenis": "administrasi","kapasitas": 5,"inventaris": "","pengelola": "Kepala Lab Jak","latitude": 0.77579873,"longitude": 127.37417266},
-            {"id": "b1778491326316","nama": "Sekretariatan HMTI","fungsi": "Kegiatan Mahasiswa","jenis": "administrasi","kapasitas": 1000,"inventaris": "","pengelola": "Kepala Bidang Kesekretariatan","latitude": 0.77584434,"longitude": 127.37446904},
-            {"id": "b1778491381195","nama": "Ruangan Administrasi HMTI","fungsi": "Administrasi Penyuratan","jenis": "administrasi","kapasitas": 5,"inventaris": "","pengelola": "Sekretaris Umum HMTI","latitude": 0.7757814,"longitude": 127.37447038},
-            {"id": "b1778491502030","nama": "Tata Usaha, Ruang Prodi Lama","fungsi": "","jenis": "administrasi","kapasitas": 5,"inventaris": "","pengelola": "Kepala Tata Usaha, Kaprodi","latitude": 0.77590094,"longitude": 127.3744867},
-            {"id": "b1778491553971","nama": "Server, Riset","fungsi": "Pengelolaan data","jenis": "administrasi","kapasitas": 5,"inventaris": "","pengelola": "Kepala Server, Kaprodi","latitude": 0.77586978,"longitude": 127.37453733},
-            {"id": "b1778491697579","nama": "Ruang Sidang","fungsi": "Perkuliahan Sidang","jenis": "perkuliahan","kapasitas": 55,"inventaris": "","pengelola": "Dosen Informatika","latitude": 0.7759785,"longitude": 127.37458706},
-            {"id": "b1778491853977","nama": "JT-01","fungsi": "Perkuliahan","jenis": "perkuliahan","kapasitas": 50,"inventaris": "","pengelola": "Dekan & Dosen Informatika","latitude": 0.77624225,"longitude": 127.37433627},
-            {"id": "b1778491898182","nama": "JT-02","fungsi": "Perkuliahan","jenis": "perkuliahan","kapasitas": 50,"inventaris": "","pengelola": "Dekan & Dosen Informatika","latitude": 0.77618334,"longitude": 127.37428129},
-            {"id": "b1778491978239","nama": "JT-03","fungsi": "Perkuliahan","jenis": "perkuliahan","kapasitas": 50,"inventaris": "","pengelola": "Dekan & Dosen Informatika","latitude": 0.7761031,"longitude": 127.37422541},
-            {"id": "b1778491998547","nama": "JT-04","fungsi": "Perkuliahan","jenis": "perkuliahan","kapasitas": 50,"inventaris": "","pengelola": "Dekan & Dosen Informatika","latitude": 0.77603416,"longitude": 127.37416707},
-            {"id": "b1778492025454","nama": "JT-05","fungsi": "Perkuliahan","jenis": "perkuliahan","kapasitas": 50,"inventaris": "","pengelola": "Dekan & Dosen Informatika","latitude": 0.77596374,"longitude": 127.37410963},
-            {"id": "b2","nama": "Lab RPL","fungsi": "Laboratorium","jenis": "laboratorium","kapasitas": 90,"inventaris": "PC, server","pengelola": "Kepala Lab RISET","latitude": 0.77581481,"longitude": 127.37422362},
-            {"id": "b3","nama": "JT-06","fungsi": "Perkuliahan","jenis": "perkuliahan","kapasitas": 200,"inventaris": "Ruang kelas","pengelola": "Fakultas Teknik","latitude": 0.7758938766063236,"longitude": 127.37411189661997},
-            {"id": "b4","nama": "Program Studi Informatika, Ruang Kaprodi","fungsi": "Administrasi","jenis": "administrasi","kapasitas": 100,"inventaris": "","pengelola": "Dekan & Kaprodi","latitude": 0.7760048873056522,"longitude": 127.37453274739794},
-            {"id": "b5","nama": "Kantin Kampus III","fungsi": "Kantin","jenis": "fasilitas","kapasitas": 80,"inventaris": "Meja kursi","pengelola": "Pengelola","latitude": 0.7758394608043214,"longitude": 127.3744049784152}
-        ],
-        jalan: [
-            {
-            "id": "j1778492622411",
-            "nama": "Jalan Kampus III Universitas Khairun",
-            "koordinat": [ [0.7764518562507153,127.37459778785707],[0.7759452668243263,127.37423032522203],[0.775886298739,127.37433090806009],[0.7759881527040315,127.37444624304774]]}
-            ],
-        zona: [
-            {
-                "id": "z1778492870612",
-                "nama": "Perpohonan",
-                "jenis": "hijau",
-                "parentId": null,
-                "koordinat": [[0.7761883970956162,127.37444875942592],[0.7762152248004959,127.37442060574618],[0.7759201200373415,127.3741752665367],[0.7758973164866022,127.37420073891363],[0.7761883970956162,127.37444875942592]]
-            },
-            {
-                "id": "z1778492934251",
-                "nama": "Perpohonan",
-                "jenis": "hijau",
-                "parentId": null,
-                "koordinat": [[0.7759133799989966,127.37424219716242],[0.7758771625947742,127.37422476869399],[0.7758007036292885,127.37435078992725],[0.7758261899512867,127.37435883383574],[0.7759133799989966,127.37424219716242]]
-            },
-            {
-                "id": "z1778493055848",
-                "nama": "Tanaman",
-                "jenis": "hijau",
-                "parentId": null,
-                "koordinat": [[0.7760515152279107,127.3745425465766],[0.7760568807690673,127.37451037094256],[0.7760099322836513,127.37448757986847],[0.7759924942746285,127.37450903029118],[0.7760515152279107,127.3745425465766]]
-            },
-            {
-                "id": "z1778493148225",
-                "nama": "Parkiran Dosen & Mahasiswa",
-                "jenis": "parkir",
-                "parentId": null,
-                "koordinat": [[0.7760858953933469,127.37436669469604],[0.7759651707162996,127.37447662811232],[0.7758444460358173,127.3743640133932],[0.7759437085511262,127.37425139867409],[0.7760743183740199,127.3743709359457],[0.7760858953933469,127.37436669469604]]
-            },
-            {
-                "id": "z1778493419000",
-                "nama": "Parkiran Mahasiswa",
-                "jenis": "parkir",
-                "parentId": null,
-                "koordinat": [[0.776449843244198,127.37457878630221],[0.776418991385267,127.37460157737634],[0.7758864614370306,127.37420206325383],[0.7759106063731576,127.37417525022546],[0.776449843244198,127.37457878630221]]
-            },
-            {
-                "id": "z1778493505955",
-                "nama": "Administrasi Program Studi",
-                "jenis": "administrasi",
-                "parentId": null,
-                "koordinat": [[0.7760528877058412,127.37454390671088],[0.7760072806056859,127.3746283677502],[0.7758476557512489,127.37454390671088],[0.7758878973117489,127.3744621269744],[0.7760528877058412,127.37454390671088]]
-            },
-            {
-                "id": "z1778493584351",
-                "nama": "Administrasi HMTI",
-                "jenis": "administrasi",
-                "parentId": null,
-                "koordinat": [[0.7758798001397669,127.37445376499696],[0.775844924120627,127.37453152277917],[0.7757657823837933,127.3744899625852],[0.7758046825597071,127.37441890806006],[0.7758798001397669,127.37445376499696]]
-            },
-            {
-                "id": "z1778493715595",
-                "nama": "Administrasi Lab Jak & Administrasi Lab RPL",
-                "jenis": "administrasi",
-                "parentId": null,
-                "koordinat": [[0.7758182276486649,127.37414564398114],[0.7757659136190518,127.37426898391156],[0.7757283548281695,127.37425825870025],[0.7757833516289779,127.37413491876977],[0.7758182276486649,127.37414564398114]]
-            },
-            {
-                "id": "z1778493837875",
-                "nama": "Area Perkuliahan",
-                "jenis": "perkuliahan",
-                "parentId": null,
-                "koordinat": [[0.7763050863042088,127.3743238930773],[0.776238017043091,127.3744056728138],[0.7759120604189191,127.37412949862171],[0.7759737641439438,127.3740517408395],[0.7763050863042088,127.3743238930773]]
-            },
-            {
-                "id": "z1778493882688",
-                "nama": "Area Perkuliahan",
-                "jenis": "perkuliahan",
-                "parentId": null,
-                "koordinat": [[0.7759602961814269,127.37401288279048],[0.7758610336665124,127.373972663248],[0.7756826294108456,127.3743453643421],[0.775775185003058,127.37438960583889],[0.7759602961814269,127.37401288279048]]
-            },
-            {
-                "id": "z1778493960271",
-                "nama": "Gedung Program Studi Informatika",
-                "jenis": "perkuliahan",
-                "parentId": null,
-                "koordinat": [[0.7760569025743014,127.37454374405169],[0.7760112954741841,127.374628205091],[0.7758463050784761,127.37454240340024],[0.7758865466389888,127.3744606236638],[0.7760569025743014,127.37454374405169]]
-            },
-            {
-                "id": "z1778494534893",
-                "nama": "Area Kampus III Universitas Khairun Kota Ternate",
-                "jenis": "batas",
-                "parentId": null,
-                "koordinat": [[0.7762016490239562,127.37444056962256],[0.7761895765567387,127.37444995418248],[0.776130555605403,127.3744298444112],[0.7760608035709398,127.37454379978172],[0.7760098309296533,127.37463094212389],[0.775761674640872,127.374490173725],[0.7758005748168366,127.37441643789703],[0.7756811915170603,127.37434404272045],[0.7758636199288266,127.37396731967206],[0.7759642238290144,127.37401156116883],[0.776311670878644,127.37432259365704],[0.7762392360767003,127.37441241730205],[0.7764525163233145,127.37457999872926],[0.7764189816940533,127.37460278980338],[0.7762016490239562,127.37444056962256]]
-            }
-            
-        ]
-    };
+// ============================================================
+// DATABASE (IndexedDB)
+// ============================================================
+const DB_NAME    = 'SIG_Kampus_Unkhair_Mobile';
+const DB_VERSION = 5;
+let db;
 
-    function getColorByJenis(jenis) {
-        const colors = { 
-            'perkuliahan': '#3498db', 'laboratorium': '#e74c3c', 'administrasi': '#1abc9c',
-            'fasilitas': '#9b59b6', 'parkir': '#95a5a6', 'hijau': '#2ecc71', 'batas': '#f1c40f'
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onerror = () => reject(req.error);
+        req.onsuccess = () => { db = req.result; resolve(); };
+        req.onupgradeneeded = (e) => {
+            const d = e.target.result;
+            if (!d.objectStoreNames.contains('bangunan')) d.createObjectStore('bangunan', { keyPath: 'id' });
+            if (!d.objectStoreNames.contains('jalan'))    d.createObjectStore('jalan',    { keyPath: 'id' });
+            if (!d.objectStoreNames.contains('zona'))     d.createObjectStore('zona',     { keyPath: 'id' });
+            if (!d.objectStoreNames.contains('history'))  d.createObjectStore('history',  { keyPath: 'timestamp' });
         };
-        return colors[jenis] || '#95a5a6';
-    }
+    });
+}
 
-    function getIcon(jenis) {
-        const bg = getColorByJenis(jenis);
-        return L.divIcon({
-            html: `<div style="background:${bg}; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 2px 6px rgba(0,0,0,0.3);"><span style="color:white; font-size:14px;">🏢</span></div>`,
-            iconSize: [28,28], popupAnchor: [0,-12]
-        });
-    }
+function loadData(store) {
+    return new Promise(res => {
+        const tx  = db.transaction(store, 'readonly');
+        const req = tx.objectStore(store).getAll();
+        req.onsuccess = () => res(req.result || []);
+    });
+}
 
-    // IndexedDB Helpers
-    function initDB() {
-        return new Promise((resolve, reject) => {
-            const req = indexedDB.open(DB_NAME, DB_VERSION);
-            req.onerror = () => reject(req.error);
-            req.onsuccess = () => { db = req.result; resolve(); };
-            req.onupgradeneeded = (e) => {
-                const dbUp = e.target.result;
-                if (!dbUp.objectStoreNames.contains('bangunan')) dbUp.createObjectStore('bangunan', { keyPath: 'id' });
-                if (!dbUp.objectStoreNames.contains('jalan')) dbUp.createObjectStore('jalan', { keyPath: 'id' });
-                if (!dbUp.objectStoreNames.contains('zona')) dbUp.createObjectStore('zona', { keyPath: 'id' });
-                if (!dbUp.objectStoreNames.contains('history')) dbUp.createObjectStore('history', { keyPath: 'timestamp' });
-            };
-        });
-    }
-
-    async function loadData(store) {
-        return new Promise(res => {
-            const tx = db.transaction(store, 'readonly');
-            const req = tx.objectStore(store).getAll();
-            req.onsuccess = () => res(req.result || []);
-        });
-    }
-
-    async function saveData(store, data) {
-        const tx = db.transaction(store, 'readwrite');
+function saveData(store, data) {
+    return new Promise((resolve, reject) => {
+        const tx       = db.transaction(store, 'readwrite');
         const storeObj = tx.objectStore(store);
-        storeObj.clear();
-        data.forEach(d => storeObj.add(d));
-        return new Promise(r => tx.oncomplete = r);
-    }
+        tx.oncomplete = () => resolve();
+        tx.onerror    = (e) => { console.error('saveData error:', e.target.error); reject(e.target.error); };
+        const clearReq = storeObj.clear();
+        clearReq.onsuccess = () => { data.forEach(d => storeObj.put(d)); };
+        clearReq.onerror   = (e) => reject(e.target.error);
+    });
+}
 
-    async function addHistory(action, type, detail) {
-        const history = { timestamp: Date.now(), action, type, data: JSON.stringify(detail).slice(0, 200) };
-        const tx = db.transaction('history', 'readwrite');
-        tx.objectStore('history').add(history);
-    }
+function addHistory(action, type, detail) {
+    const entry = { timestamp: Date.now(), action, type, data: JSON.stringify(detail).slice(0, 200) };
+    const tx = db.transaction('history', 'readwrite');
+    tx.objectStore('history').add(entry);
+}
 
-    // Render Peta + Layer
-    async function renderMap() {
-        buildingMarkers.forEach(m => map.removeLayer(m));
-        roadLines.forEach(l => map.removeLayer(l));
-        zonePolygons.forEach(p => map.removeLayer(p));
-        buildingMarkers = []; roadLines = []; zonePolygons = [];
-        
-        const bangunan = await loadData('bangunan');
-        const jalan = await loadData('jalan');
-        const zona = await loadData('zona');
-        
-        zona.forEach(z => {
-            const color = getColorByJenis(z.jenis);
-            const fill = z.jenis === 'batas' ? 0.1 : 0.3;
-            const poly = L.polygon(z.koordinat, { color, weight: 2, fillColor: color, fillOpacity: fill, dashArray: z.jenis === 'batas' ? '5,5' : null }).addTo(map);
-            poly.bindPopup(`<b>${z.nama}</b><br>Jenis:${z.jenis}<br><button class="btn btn-warning btn-sm" onclick="editZona('${z.id}')">✏️ Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteZona('${z.id}')">🗑️ Hapus</button>`);
-            zonePolygons.push(poly);
-        });
-        
-        jalan.forEach(j => {
-            const line = L.polyline(j.koordinat, { color: '#222', weight: 5, opacity: 0.9 }).addTo(map);
-            line.bindPopup(`<b>${j.nama || 'Jalan'}</b><br><button class="btn btn-warning" onclick="editJalan('${j.id}')">Edit</button> <button class="btn btn-danger" onclick="deleteJalan('${j.id}')">Hapus</button>`);
-            roadLines.push(line);
-        });
-        
-        bangunan.forEach(b => {
-            const marker = L.marker([b.latitude, b.longitude], { icon: getIcon(b.jenis) }).addTo(map);
-            marker.bindPopup(`<b>${b.nama}</b><br>Fungsi: ${b.fungsi || '-'}<br>Pengelola: ${b.pengelola || '-'}<br><button class="btn btn-warning btn-sm" onclick="editBangunan('${b.id}')">✏️ Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteBangunan('${b.id}')">🗑️ Hapus</button>`);
-            buildingMarkers.push(marker);
-        });
-        refreshSidebar();
-    }
+// ============================================================
+// MAP
+// ============================================================
+let map;
+let buildingMarkers = [], roadLines = [], zonePolygons = [];
+let drawingMode = null, drawingPoints = [], tempLayer = null;
+let highlightCircle = null;
 
-    async function refreshSidebar() {
-        const bangunan = await loadData('bangunan');
-        const jalan = await loadData('jalan');
-        const zona = await loadData('zona');
-        const history = await loadData('history');
-        document.getElementById('bangunanList').innerHTML = bangunan.map(b => `
-            <div class="list-item"><div class="list-item-title">${b.nama}</div><div class="list-item-sub">${b.latitude.toFixed(5)}, ${b.longitude.toFixed(5)}</div>
-            <div class="list-item-actions"><button class="btn btn-warning btn-sm" onclick="editBangunan('${b.id}')">Edit</button><button class="btn btn-danger btn-sm" onclick="deleteBangunan('${b.id}')">Hapus</button></div></div>
-        `).join('');
-        document.getElementById('jalanList').innerHTML = jalan.map(j => `
-            <div class="list-item"><div class="list-item-title">${j.nama || 'Jalan'}</div><div class="list-item-sub">${j.koordinat.length} titik</div>
-            <div class="list-item-actions"><button class="btn btn-warning" onclick="editJalan('${j.id}')">Edit</button><button class="btn btn-danger" onclick="deleteJalan('${j.id}')">Hapus</button></div></div>
-        `).join('');
-        
-        function renderZTree(parent=null, level=0) {
-            const children = zona.filter(z => z.parentId === parent);
-            if (children.length === 0 && level===0) return '<div class="list-item-sub">Tidak ada zona</div>';
-            return children.map(z => `
-                <div class="list-item" style="margin-left:${level*15}px; border-left-color:${getColorByJenis(z.jenis)}">
-                    <div class="list-item-title">${z.nama} (${z.jenis})</div>
-                    <div class="list-item-actions"><button class="btn btn-warning btn-sm" onclick="editZona('${z.id}')">Edit</button><button class="btn btn-danger btn-sm" onclick="deleteZona('${z.id}')">Hapus</button></div>
-                </div>${renderZTree(z.id, level+1)}
-            `).join('');
+function getColorByJenis(jenis) {
+    const colors = {
+        'perkuliahan':'#3498db', 'laboratorium':'#e74c3c', 'administrasi':'#1abc9c',
+        'fasilitas':'#9b59b6', 'parkir':'#95a5a6', 'hijau':'#2ecc71', 'batas':'#f1c40f'
+    };
+    return colors[jenis] || '#95a5a6';
+}
+
+function getJenisLabel(jenis) {
+    const labels = {
+        'perkuliahan':'🏛️ Perkuliahan','laboratorium':'🔬 Laboratorium',
+        'administrasi':'📋 Administrasi','fasilitas':'☕ Fasilitas Umum'
+    };
+    return labels[jenis] || jenis;
+}
+
+function getIcon(jenis, highlight=false) {
+    const bg = getColorByJenis(jenis);
+    const ring = highlight ? `box-shadow:0 0 0 4px #ff9800,0 0 0 8px rgba(255,152,0,0.3);` : '';
+    const emoji = { perkuliahan:'🏛', laboratorium:'🔬', administrasi:'📋', fasilitas:'☕' }[jenis] || '🏢';
+    return L.divIcon({
+        html: `<div style="background:${bg};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);${ring}transition:box-shadow 0.3s;"><span style="font-size:15px;">${emoji}</span></div>`,
+        iconSize: [32,32], popupAnchor: [0,-14], className:'custom-marker'
+    });
+}
+
+function initMap() {
+    map = L.map('map').setView([0.77602, 127.37436], 18);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OSM', maxZoom: 20
+    }).addTo(map);
+    setupCoordPicker();
+
+    // Klik di peta = tutup search results & detail panel
+    map.on('click', () => {
+        hideSearchResults();
+    });
+}
+
+async function renderMap() {
+    buildingMarkers.forEach(m => map.removeLayer(m));
+    roadLines.forEach(l => map.removeLayer(l));
+    zonePolygons.forEach(p => map.removeLayer(p));
+    buildingMarkers = []; roadLines = []; zonePolygons = [];
+
+    const bangunan = await loadData('bangunan');
+    const jalan    = await loadData('jalan');
+    const zona     = await loadData('zona');
+
+    zona.forEach(z => {
+        const color = getColorByJenis(z.jenis);
+        const poly  = L.polygon(z.koordinat, {
+            color, weight:2, fillColor:color,
+            fillOpacity: z.jenis==='batas' ? 0.1 : 0.3,
+            dashArray: z.jenis==='batas' ? '5,5' : null
+        }).addTo(map);
+        poly.bindPopup(`<b>${z.nama}</b><br>Jenis: ${z.jenis}<br>
+            <button class="btn btn-warning btn-sm" onclick="editZona('${z.id}')">✏️ Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteZona('${z.id}')">🗑️ Hapus</button>`);
+        zonePolygons.push(poly);
+    });
+
+    jalan.forEach(j => {
+        const line = L.polyline(j.koordinat, { color:'#222', weight:5, opacity:0.9 }).addTo(map);
+        line.bindPopup(`<b>${j.nama||'Jalan'}</b><br>
+            <button class="btn btn-warning btn-sm" onclick="editJalan('${j.id}')">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteJalan('${j.id}')">Hapus</button>`);
+        roadLines.push(line);
+    });
+
+    bangunan.forEach(b => {
+        const marker = L.marker([b.latitude, b.longitude], { icon: getIcon(b.jenis) }).addTo(map);
+        marker._bangunanData = b; // simpan referensi data
+        marker.on('click', () => showDetailPanel(b));
+        buildingMarkers.push(marker);
+    });
+
+    refreshSidebar();
+}
+
+// Satu handler click terpusat
+function setupCoordPicker() {
+    map.on('click', e => {
+        if (drawingMode) {
+            drawingPoints.push([e.latlng.lat, e.latlng.lng]);
+            redrawTempLayer();
+            updateDrawIndicator();
+        } else if (document.querySelector('.tab-content.active')?.id === 'tab-bangunan') {
+            document.getElementById('bangunan_lat').value = e.latlng.lat.toFixed(7);
+            document.getElementById('bangunan_lng').value = e.latlng.lng.toFixed(7);
+            const info = document.getElementById('coordInfo');
+            info.innerHTML = `✅ Koordinat: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+            setTimeout(() => info.innerHTML = '📍 Klik peta untuk isi koordinat bangunan', 2000);
         }
-        document.getElementById('zonaList').innerHTML = renderZTree(null,0);
-        const parentSelect = document.getElementById('zona_parent');
-        parentSelect.innerHTML = '<option value="">-- Zona Utama --</option>' + zona.map(z => `<option value="${z.id}">${z.nama}</option>`).join('');
-        document.getElementById('historyList').innerHTML = history.sort((a,b)=>b.timestamp-a.timestamp).map(h => `<div class="history-item">🕒 ${new Date(h.timestamp).toLocaleString()}<br><strong>${h.action}</strong> - ${h.type}<br><small>${h.data}</small></div>`).join('');
-    }
+    });
+}
 
-    // Drawing
-    function startDrawLine() { startDrawing('line'); }
-    function startDrawPolygon() { startDrawing('polygon'); }
-    function startDrawing(type) { cancelDrawing(); drawingMode = type; drawingPoints = []; document.getElementById('drawModeIndicator').style.display = 'block'; map.on('click', onMapClick); map.on('dblclick', finishDrawing); }
-    function onMapClick(e) { if(!drawingMode) return; drawingPoints.push([e.latlng.lat, e.latlng.lng]); if(tempLayer) map.removeLayer(tempLayer); if(drawingMode === 'line') tempLayer = L.polyline(drawingPoints, {color:'#ff9800', weight:4, dashArray:'5,5'}).addTo(map); else if(drawingPoints.length>=2) tempLayer = L.polygon(drawingPoints, {color:'#ff9800', weight:2, fillOpacity:0.2}).addTo(map); }
-    function finishDrawing() { if(!drawingMode || drawingPoints.length<2) { alert('Minimal 2 titik'); return; } let final = [...drawingPoints]; if(drawingMode==='polygon' && final.length>=3 && (final[0][0]!==final[final.length-1][0] || final[0][1]!==final[final.length-1][1])) final.push(final[0]); const jsonStr = JSON.stringify(final); if(drawingMode==='line') document.getElementById('jalan_koordinat').value = jsonStr; else document.getElementById('zona_koordinat').value = jsonStr; cancelDrawing(); alert('Koordinat tergambar!'); }
-    function cancelDrawing() { if(tempLayer) map.removeLayer(tempLayer); map.off('click', onMapClick); map.off('dblclick', finishDrawing); drawingMode=null; drawingPoints=[]; tempLayer=null; document.getElementById('drawModeIndicator').style.display='none'; }
+// ============================================================
+// SEARCH FEATURE
+// ============================================================
+const searchInput = document.getElementById('searchInput');
+const searchResultsOverlay = document.getElementById('searchResultsOverlay');
+const searchClearBtn = document.getElementById('searchClearBtn');
 
-    // CRUD Bangunan
-    async function addOrUpdateBangunan() {
-        const id = document.getElementById('bangunan_id').value || 'b'+Date.now();
-        const data = { id, nama: document.getElementById('bangunan_nama').value, fungsi: document.getElementById('bangunan_fungsi').value, jenis: document.getElementById('bangunan_jenis').value, kapasitas: parseInt(document.getElementById('bangunan_kapasitas').value)||0, inventaris: document.getElementById('bangunan_inventaris').value, pengelola: document.getElementById('bangunan_pengelola').value, latitude: parseFloat(document.getElementById('bangunan_lat').value), longitude: parseFloat(document.getElementById('bangunan_lng').value) };
-        if(!data.nama || isNaN(data.latitude)) { alert("Isi nama & koordinat"); return; }
-        let list = await loadData('bangunan');
-        const idx = list.findIndex(b=>b.id===id);
-        if(idx>=0) list[idx]=data; else list.push(data);
-        await saveData('bangunan',list); await addHistory(idx>=0?'UPDATE':'CREATE','Bangunan',{nama:data.nama}); clearBangunanForm(); renderMap();
+searchInput.addEventListener('input', debounce(handleSearch, 200));
+searchInput.addEventListener('focus', () => {
+    if (searchInput.value.trim().length > 0) handleSearch();
+});
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#searchBarWrap')) hideSearchResults();
+});
+
+function debounce(fn, delay) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+}
+
+async function handleSearch() {
+    const q = searchInput.value.trim().toLowerCase();
+    searchClearBtn.classList.toggle('visible', q.length > 0);
+    if (q.length === 0) { hideSearchResults(); return; }
+
+    const bangunan = await loadData('bangunan');
+    const results = bangunan.filter(b =>
+        b.nama.toLowerCase().includes(q) ||
+        (b.fungsi && b.fungsi.toLowerCase().includes(q)) ||
+        (b.pengelola && b.pengelola.toLowerCase().includes(q)) ||
+        (b.inventaris && b.inventaris.toLowerCase().includes(q)) ||
+        (b.jenis && b.jenis.toLowerCase().includes(q))
+    );
+
+    renderSearchResults(results, q);
+}
+
+function highlightText(text, query) {
+    if (!text || !query) return text || '-';
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+}
+
+function renderSearchResults(results, q) {
+    if (results.length === 0) {
+        searchResultsOverlay.innerHTML = `<div class="search-no-result">😕 Tidak ditemukan hasil untuk "<strong>${q}</strong>"</div>`;
+    } else {
+        const header = `<div class="search-result-header">Ditemukan ${results.length} bangunan</div>`;
+        const items = results.map(b => {
+            const color = getColorByJenis(b.jenis);
+            const emoji = { perkuliahan:'🏛', laboratorium:'🔬', administrasi:'📋', fasilitas:'☕' }[b.jenis] || '🏢';
+            return `
+            <div class="search-result-item" onclick="selectSearchResult('${b.id}')">
+                <div class="search-result-icon" style="background:${color}">${emoji}</div>
+                <div class="search-result-body">
+                    <div class="search-result-name">${highlightText(b.nama, q)}</div>
+                    <div class="search-result-meta">
+                        ${b.fungsi ? highlightText(b.fungsi, q) + ' &nbsp;·&nbsp; ' : ''}
+                        ${b.pengelola ? '👤 ' + highlightText(b.pengelola, q) : ''}
+                    </div>
+                </div>
+                <span class="search-result-badge" style="background:${color}">${b.jenis}</span>
+            </div>`;
+        }).join('');
+        searchResultsOverlay.innerHTML = header + items;
     }
-    async function deleteBangunan(id) { if(!confirm("Hapus?")) return; let list=await loadData('bangunan'); const del=list.find(b=>b.id===id); list=list.filter(b=>b.id!==id); await saveData('bangunan',list); await addHistory('DELETE','Bangunan',{nama:del?.nama}); renderMap(); }
-    async function editBangunan(id) { let list=await loadData('bangunan'); let b=list.find(x=>x.id===id); if(b){ document.getElementById('bangunan_id').value=b.id; document.getElementById('bangunan_nama').value=b.nama; document.getElementById('bangunan_fungsi').value=b.fungsi||''; document.getElementById('bangunan_jenis').value=b.jenis; document.getElementById('bangunan_kapasitas').value=b.kapasitas; document.getElementById('bangunan_inventaris').value=b.inventaris||''; document.getElementById('bangunan_pengelola').value=b.pengelola||''; document.getElementById('bangunan_lat').value=b.latitude; document.getElementById('bangunan_lng').value=b.longitude; switchTab('bangunan'); } }
-    function clearBangunanForm() { document.getElementById('bangunan_id').value=''; document.getElementById('bangunan_nama').value=''; document.getElementById('bangunan_fungsi').value=''; document.getElementById('bangunan_kapasitas').value=''; document.getElementById('bangunan_inventaris').value=''; document.getElementById('bangunan_pengelola').value=''; document.getElementById('bangunan_lat').value=''; document.getElementById('bangunan_lng').value=''; }
-    async function saveJalan() { let nama=document.getElementById('jalan_nama').value; let koord; try{ koord=JSON.parse(document.getElementById('jalan_koordinat').value); }catch(e){ alert("Invalid JSON koordinat"); return; } let jalan=await loadData('jalan'); jalan.push({id:'j'+Date.now(), nama:nama||'Jalan', koordinat:koord}); await saveData('jalan',jalan); await addHistory('CREATE','Jalan',{nama}); document.getElementById('jalan_nama').value=''; document.getElementById('jalan_koordinat').value=''; renderMap(); }
-    async function deleteJalan(id) { let jalan=(await loadData('jalan')).filter(j=>j.id!==id); await saveData('jalan',jalan); renderMap(); }
-    async function editJalan(id) { let jalan=await loadData('jalan'); let j=jalan.find(x=>x.id===id); if(j){ document.getElementById('jalan_nama').value=j.nama||''; document.getElementById('jalan_koordinat').value=JSON.stringify(j.koordinat); switchTab('jalan'); } }
-    async function saveZona() { let nama=document.getElementById('zona_nama').value; let jenis=document.getElementById('zona_jenis').value; let parentId=document.getElementById('zona_parent').value||null; let koord; try{ koord=JSON.parse(document.getElementById('zona_koordinat').value); }catch(e){ alert("Format polygon salah"); return; } let zona=await loadData('zona'); zona.push({id:'z'+Date.now(), nama, jenis, parentId, koordinat:koord}); await saveData('zona',zona); await addHistory('CREATE','Zona',{nama}); document.getElementById('zona_nama').value=''; document.getElementById('zona_koordinat').value=''; renderMap(); }
-    async function deleteZona(id) { let zona=(await loadData('zona')).filter(z=>z.id!==id && z.parentId!==id); await saveData('zona',zona); renderMap(); }
-    async function editZona(id) { let zona=await loadData('zona'); let z=zona.find(x=>x.id===id); if(z){ document.getElementById('zona_nama').value=z.nama; document.getElementById('zona_jenis').value=z.jenis; document.getElementById('zona_parent').value=z.parentId||''; document.getElementById('zona_koordinat').value=JSON.stringify(z.koordinat); switchTab('zona'); } }
-    async function resetToDefault() { if(confirm("Reset semua data?")){ await saveData('bangunan', DEFAULT_DATA.bangunan); await saveData('jalan', DEFAULT_DATA.jalan); await saveData('zona', DEFAULT_DATA.zona); await addHistory('RESET','System','Reset ke default JSON'); renderMap(); } }
-    async function exportData() { const data={ bangunan:await loadData('bangunan'), jalan:await loadData('jalan'), zona:await loadData('zona'), exportTime:new Date().toISOString() }; const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})); a.download=`sig_kampus_${Date.now()}.json`; a.click(); }
-    async function importData() { let inp=document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange=async(e)=>{ let text=await e.target.files[0].text(); let data=JSON.parse(text); if(data.bangunan) await saveData('bangunan',data.bangunan); if(data.jalan) await saveData('jalan',data.jalan); if(data.zona) await saveData('zona',data.zona); await addHistory('IMPORT','System','Import data'); renderMap(); }; inp.click(); }
-    async function exportHistory() { let hist=await loadData('history'); let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(hist,null,2)],{type:'application/json'})); a.download=`history_${Date.now()}.json`; a.click(); }
-    async function clearHistory() { if(confirm("Hapus history?")){ const tx=db.transaction('history','readwrite'); tx.objectStore('history').clear(); refreshSidebar(); } }
-    function switchTab(tab) { document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(`tab-${tab}`).classList.add('active'); if(tab==='bangunan') document.querySelector('.tab-btn:first-child').classList.add('active'); else if(tab==='jalan') document.querySelectorAll('.tab-btn')[1].classList.add('active'); else if(tab==='zona') document.querySelectorAll('.tab-btn')[2].classList.add('active'); else document.querySelectorAll('.tab-btn')[3].classList.add('active'); cancelDrawing(); }
-    function setupCoordPicker() { map.on('click', e=>{ if(document.querySelector('.tab-content.active')?.id === 'tab-bangunan'){ document.getElementById('bangunan_lat').value=e.latlng.lat.toFixed(7); document.getElementById('bangunan_lng').value=e.latlng.lng.toFixed(7); const info=document.getElementById('coordInfo'); info.innerHTML=`✅ Koordinat: ${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`; setTimeout(()=>info.innerHTML='📍 Klik peta untuk isi koordinat bangunan',2000); } }); }
-    async function init() { await initDB(); let existing=await loadData('bangunan'); if(existing.length===0){ await saveData('bangunan',DEFAULT_DATA.bangunan); await saveData('jalan',DEFAULT_DATA.jalan); await saveData('zona',DEFAULT_DATA.zona); } map=L.map('map').setView([0.77602,127.37436],18); L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OSM',maxZoom:20}).addTo(map); setupCoordPicker(); await renderMap(); }
-    window.init=init; window.addOrUpdateBangunan=addOrUpdateBangunan; window.deleteBangunan=deleteBangunan; window.editBangunan=editBangunan; window.saveJalan=saveJalan; window.deleteJalan=deleteJalan; window.editJalan=editJalan; window.saveZona=saveZona; window.deleteZona=deleteZona; window.editZona=editZona; window.resetToDefault=resetToDefault; window.exportData=exportData; window.importData=importData; window.exportHistory=exportHistory; window.clearHistory=clearHistory; window.switchTab=switchTab; window.clearBangunanForm=clearBangunanForm; window.startDrawLine=startDrawLine; window.startDrawPolygon=startDrawPolygon; window.cancelDrawing=cancelDrawing; init();
+    searchResultsOverlay.classList.add('visible');
+}
+
+async function selectSearchResult(id) {
+    hideSearchResults();
+    searchInput.value = '';
+    searchClearBtn.classList.remove('visible');
+
+    const bangunan = await loadData('bangunan');
+    const b = bangunan.find(x => x.id === id);
+    if (!b) return;
+
+    // Pan & zoom ke lokasi
+    map.flyTo([b.latitude, b.longitude], 20, { animate: true, duration: 0.8 });
+
+    // Highlight marker
+    highlightMarker(b.id);
+
+    // Tampilkan detail panel
+    showDetailPanel(b);
+}
+
+function highlightMarker(id) {
+    // Reset semua marker ke icon normal
+    buildingMarkers.forEach(m => {
+        if (m._bangunanData) {
+            m.setIcon(getIcon(m._bangunanData.jenis, false));
+        }
+    });
+    // Highlight marker yang dicari
+    const target = buildingMarkers.find(m => m._bangunanData && m._bangunanData.id === id);
+    if (target) {
+        target.setIcon(getIcon(target._bangunanData.jenis, true));
+        setTimeout(() => {
+            if (target._bangunanData) target.setIcon(getIcon(target._bangunanData.jenis, false));
+        }, 3500);
+    }
+}
+
+function hideSearchResults() {
+    searchResultsOverlay.classList.remove('visible');
+}
+
+function clearSearch() {
+    searchInput.value = '';
+    searchClearBtn.classList.remove('visible');
+    hideSearchResults();
+}
+
+// ============================================================
+// DETAIL PANEL
+// ============================================================
+function showDetailPanel(b) {
+    const color = getColorByJenis(b.jenis);
+    document.getElementById('detailTitle').textContent = b.nama;
+    const badge = document.getElementById('detailBadge');
+    badge.textContent = getJenisLabel(b.jenis);
+    badge.style.background = color;
+
+    const fields = [
+        { label: 'Fungsi', value: b.fungsi || '-' },
+        { label: 'Kapasitas', value: b.kapasitas ? b.kapasitas + ' orang' : '-' },
+        { label: 'Pengelola', value: b.pengelola || '-', full: true },
+        { label: 'Inventaris', value: b.inventaris || '-', full: true },
+        { label: 'Latitude', value: b.latitude?.toFixed(7) || '-' },
+        { label: 'Longitude', value: b.longitude?.toFixed(7) || '-' },
+    ];
+
+    document.getElementById('detailGrid').innerHTML = fields.map(f => `
+        <div class="detail-cell ${f.full ? 'full' : ''}">
+            <div class="detail-label">${f.label}</div>
+            <div class="detail-value">${f.value}</div>
+        </div>`).join('');
+
+    document.getElementById('detailActions').innerHTML = `
+        <button class="btn btn-warning" style="flex:1;" onclick="editBangunan('${b.id}'); closeDetailPanel();">✏️ Edit</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="deleteBangunan('${b.id}'); closeDetailPanel();">🗑️ Hapus</button>`;
+
+    document.getElementById('detailPanel').classList.add('visible');
+}
+
+function closeDetailPanel() {
+    document.getElementById('detailPanel').classList.remove('visible');
+    // Reset highlight
+    buildingMarkers.forEach(m => {
+        if (m._bangunanData) m.setIcon(getIcon(m._bangunanData.jenis, false));
+    });
+}
+
+// ---- MODE MENGGAMBAR ----
+function startDrawLine()    { startDrawing('line'); }
+function startDrawPolygon() { startDrawing('polygon'); }
+
+function startDrawing(type) {
+    cancelDrawing();
+    drawingMode = type; drawingPoints = [];
+    map.doubleClickZoom.disable();
+    map.getContainer().style.cursor = 'crosshair';
+    updateDrawIndicator();
+}
+
+function updateDrawIndicator() {
+    const el    = document.getElementById('drawModeIndicator');
+    const count = drawingPoints.length;
+    const min   = drawingMode === 'line' ? 2 : 3;
+    const ready = count >= min;
+    el.style.display = drawingMode ? 'flex' : 'none';
+    el.innerHTML = `
+        <span>✏️ ${count} titik — ${ready ? 'siap!' : 'min '+min}</span>
+        ${ready ? `<button onclick="finishDrawing()" style="background:#0f3b2c;color:white;border:none;padding:4px 10px;border-radius:20px;font-weight:bold;cursor:pointer;">✅ Selesai</button>` : ''}
+        <button onclick="undoLastPoint()" style="background:#e74c3c;color:white;border:none;padding:4px 10px;border-radius:20px;font-weight:bold;cursor:pointer;" ${count===0?'disabled':''}>↩ Undo</button>
+        <button onclick="cancelDrawing()" style="background:#555;color:white;border:none;padding:4px 10px;border-radius:20px;font-weight:bold;cursor:pointer;">❌</button>
+    `;
+}
+
+function undoLastPoint() {
+    if (drawingPoints.length > 0) { drawingPoints.pop(); redrawTempLayer(); updateDrawIndicator(); }
+}
+
+function redrawTempLayer() {
+    if (tempLayer) { map.removeLayer(tempLayer); tempLayer = null; }
+    if (drawingPoints.length < 1) return;
+    if (drawingMode === 'line') {
+        tempLayer = L.polyline(drawingPoints, { color:'#ff9800', weight:4, dashArray:'5,5' }).addTo(map);
+    } else if (drawingPoints.length >= 2) {
+        tempLayer = L.polygon(drawingPoints, { color:'#ff9800', weight:2, fillOpacity:0.2 }).addTo(map);
+    }
+}
+
+function finishDrawing() {
+    const min = drawingMode === 'line' ? 2 : 3;
+    if (!drawingMode || drawingPoints.length < min) {
+        alert(`Minimal ${min} titik untuk ${drawingMode==='line'?'jalan':'zona'}`);
+        return;
+    }
+    let final = [...drawingPoints];
+    if (drawingMode === 'polygon') {
+        const f = final[0], l = final[final.length-1];
+        if (f[0] !== l[0] || f[1] !== l[1]) final.push(f);
+    }
+    const jsonStr = JSON.stringify(final);
+    if (drawingMode === 'line') document.getElementById('jalan_koordinat').value = jsonStr;
+    else                        document.getElementById('zona_koordinat').value  = jsonStr;
+    alert(`✅ ${drawingPoints.length} titik direkam! Klik 💾 Simpan.`);
+    cancelDrawing();
+}
+
+function cancelDrawing() {
+    if (tempLayer) { map.removeLayer(tempLayer); tempLayer = null; }
+    drawingMode = null; drawingPoints = [];
+    document.getElementById('drawModeIndicator').style.display = 'none';
+    map.doubleClickZoom.enable();
+    map.getContainer().style.cursor = '';
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+let sidebarOpen = true;
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const btn     = document.getElementById('sidebarToggleBtn');
+    sidebarOpen   = !sidebarOpen;
+    if (sidebarOpen) {
+        sidebar.classList.remove('collapsed'); overlay.classList.add('visible');
+        btn.innerHTML = '✕'; btn.title = 'Tutup Sidebar';
+    } else {
+        sidebar.classList.add('collapsed'); overlay.classList.remove('visible');
+        btn.innerHTML = '☰'; btn.title = 'Buka Sidebar';
+    }
+    setTimeout(() => { if (map) map.invalidateSize(); }, 300);
+}
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 700 && sidebarOpen)
+        document.getElementById('sidebarOverlay').classList.remove('visible');
+});
+
+function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    const idx = { bangunan:0, jalan:1, zona:2, history:3 };
+    document.querySelectorAll('.tab-btn')[idx[tab]]?.classList.add('active');
+    cancelDrawing();
+}
+
+async function refreshSidebar() {
+    const bangunan = await loadData('bangunan');
+    const jalan    = await loadData('jalan');
+    const zona     = await loadData('zona');
+    const history  = await loadData('history');
+
+    document.getElementById('bangunanList').innerHTML = bangunan.map(b => `
+        <div class="list-item" onclick="selectSearchResult('${b.id}')">
+            <div class="list-item-title">${b.nama}</div>
+            <div class="list-item-sub">${b.latitude.toFixed(5)}, ${b.longitude.toFixed(5)}</div>
+            <div class="list-item-actions">
+                <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); editBangunan('${b.id}')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteBangunan('${b.id}')">Hapus</button>
+            </div>
+        </div>`).join('');
+
+    document.getElementById('jalanList').innerHTML = jalan.map(j => `
+        <div class="list-item">
+            <div class="list-item-title">${j.nama||'Jalan'}</div>
+            <div class="list-item-sub">${j.koordinat.length} titik</div>
+            <div class="list-item-actions">
+                <button class="btn btn-warning btn-sm" onclick="editJalan('${j.id}')">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteJalan('${j.id}')">Hapus</button>
+            </div>
+        </div>`).join('');
+
+    function renderZTree(parentId=null, level=0) {
+        const children = zona.filter(z => z.parentId === parentId);
+        if (children.length===0 && level===0) return '<div class="list-item-sub">Tidak ada zona</div>';
+        return children.map(z => `
+            <div class="list-item" style="margin-left:${level*15}px;border-left-color:${getColorByJenis(z.jenis)}">
+                <div class="list-item-title">${z.nama} (${z.jenis})</div>
+                <div class="list-item-actions">
+                    <button class="btn btn-warning btn-sm" onclick="editZona('${z.id}')">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteZona('${z.id}')">Hapus</button>
+                </div>
+            </div>${renderZTree(z.id, level+1)}`).join('');
+    }
+    document.getElementById('zonaList').innerHTML = renderZTree(null,0);
+
+    document.getElementById('zona_parent').innerHTML =
+        '<option value="">-- Zona Utama --</option>' +
+        zona.map(z => `<option value="${z.id}">${z.nama}</option>`).join('');
+
+    document.getElementById('historyList').innerHTML = history
+        .sort((a,b) => b.timestamp - a.timestamp)
+        .map(h => `<div class="history-item">🕒 ${new Date(h.timestamp).toLocaleString()}<br><strong>${h.action}</strong> - ${h.type}<br><small>${h.data}</small></div>`)
+        .join('');
+}
+
+// ============================================================
+// CRUD BANGUNAN
+// ============================================================
+async function addOrUpdateBangunan() {
+    const id = document.getElementById('bangunan_id').value || 'b'+Date.now();
+    const data = {
+        id,
+        nama      : document.getElementById('bangunan_nama').value,
+        fungsi    : document.getElementById('bangunan_fungsi').value,
+        jenis     : document.getElementById('bangunan_jenis').value,
+        kapasitas : parseInt(document.getElementById('bangunan_kapasitas').value)||0,
+        inventaris: document.getElementById('bangunan_inventaris').value,
+        pengelola : document.getElementById('bangunan_pengelola').value,
+        latitude  : parseFloat(document.getElementById('bangunan_lat').value),
+        longitude : parseFloat(document.getElementById('bangunan_lng').value)
+    };
+    if (!data.nama || isNaN(data.latitude)) { alert('Isi nama & koordinat'); return; }
+    let list = await loadData('bangunan');
+    const idx = list.findIndex(b => b.id === id);
+    if (idx >= 0) { list[idx] = data; await addHistory('UPDATE','Bangunan',{nama:data.nama}); }
+    else          { list.push(data); await addHistory('CREATE','Bangunan',{nama:data.nama}); }
+    await saveData('bangunan', list);
+    clearBangunanForm();
+    renderMap();
+}
+
+async function deleteBangunan(id) {
+    if (!confirm('Hapus bangunan ini?')) return;
+    let list = await loadData('bangunan');
+    const del = list.find(b => b.id===id);
+    await saveData('bangunan', list.filter(b => b.id!==id));
+    await addHistory('DELETE','Bangunan',{nama:del?.nama});
+    renderMap();
+}
+
+async function editBangunan(id) {
+    const b = (await loadData('bangunan')).find(x => x.id===id);
+    if (!b) return;
+    document.getElementById('bangunan_id').value        = b.id;
+    document.getElementById('bangunan_nama').value       = b.nama;
+    document.getElementById('bangunan_fungsi').value     = b.fungsi||'';
+    document.getElementById('bangunan_jenis').value      = b.jenis;
+    document.getElementById('bangunan_kapasitas').value  = b.kapasitas;
+    document.getElementById('bangunan_inventaris').value = b.inventaris||'';
+    document.getElementById('bangunan_pengelola').value  = b.pengelola||'';
+    document.getElementById('bangunan_lat').value        = b.latitude;
+    document.getElementById('bangunan_lng').value        = b.longitude;
+    switchTab('bangunan');
+}
+
+function clearBangunanForm() {
+    ['bangunan_id','bangunan_nama','bangunan_fungsi','bangunan_kapasitas',
+     'bangunan_inventaris','bangunan_pengelola','bangunan_lat','bangunan_lng']
+        .forEach(id => document.getElementById(id).value = '');
+}
+
+// ============================================================
+// CRUD JALAN
+// ============================================================
+async function saveJalan() {
+    const nama     = document.getElementById('jalan_nama').value.trim();
+    const koordRaw = document.getElementById('jalan_koordinat').value.trim();
+    if (!koordRaw) { alert('Koordinat kosong!\nGunakan tombol ✏️ Gambar Jalan terlebih dahulu.'); return; }
+    let koord;
+    try { koord = JSON.parse(koordRaw); } catch(e) { alert('Format koordinat tidak valid.'); return; }
+    if (!Array.isArray(koord) || koord.length < 2) { alert('Minimal 2 titik koordinat.'); return; }
+    try {
+        const jalan = await loadData('jalan');
+        const entry = { id:'j'+Date.now(), nama:nama||'Jalan Baru', koordinat:koord };
+        jalan.push(entry);
+        await saveData('jalan', jalan);
+        await addHistory('CREATE','Jalan',{nama:entry.nama});
+        document.getElementById('jalan_nama').value      = '';
+        document.getElementById('jalan_koordinat').value = '';
+        alert('✅ Jalan berhasil disimpan!');
+        renderMap();
+    } catch(err) { alert('Gagal menyimpan: '+err.message); }
+}
+
+async function deleteJalan(id) {
+    if (!confirm('Hapus jalan ini?')) return;
+    const jalan = await loadData('jalan');
+    const del   = jalan.find(j => j.id===id);
+    await saveData('jalan', jalan.filter(j => j.id!==id));
+    await addHistory('DELETE','Jalan',{nama:del?.nama});
+    renderMap();
+}
+
+async function editJalan(id) {
+    const j = (await loadData('jalan')).find(x => x.id===id);
+    if (!j) return;
+    document.getElementById('jalan_nama').value      = j.nama||'';
+    document.getElementById('jalan_koordinat').value = JSON.stringify(j.koordinat);
+    switchTab('jalan');
+}
+
+// ============================================================
+// CRUD ZONA
+// ============================================================
+async function saveZona() {
+    const nama     = document.getElementById('zona_nama').value.trim();
+    const jenis    = document.getElementById('zona_jenis').value;
+    const parentId = document.getElementById('zona_parent').value || null;
+    const koordRaw = document.getElementById('zona_koordinat').value.trim();
+    if (!koordRaw) { alert('Koordinat kosong!\nGunakan tombol ✏️ Gambar Zona terlebih dahulu.'); return; }
+    let koord;
+    try { koord = JSON.parse(koordRaw); } catch(e) { alert('Format koordinat tidak valid.'); return; }
+    if (!Array.isArray(koord) || koord.length < 3) { alert('Minimal 3 titik koordinat untuk zona.'); return; }
+    try {
+        const zona  = await loadData('zona');
+        const entry = { id:'z'+Date.now(), nama:nama||'Zona Baru', jenis, parentId, koordinat:koord };
+        zona.push(entry);
+        await saveData('zona', zona);
+        await addHistory('CREATE','Zona',{nama:entry.nama});
+        document.getElementById('zona_nama').value      = '';
+        document.getElementById('zona_koordinat').value = '';
+        alert('✅ Zona berhasil disimpan!');
+        renderMap();
+    } catch(err) { alert('Gagal menyimpan: '+err.message); }
+}
+
+async function deleteZona(id) {
+    if (!confirm('Hapus zona ini (termasuk zona anak)?')) return;
+    const zona = (await loadData('zona')).filter(z => z.id!==id && z.parentId!==id);
+    await saveData('zona', zona);
+    await addHistory('DELETE','Zona',{id});
+    renderMap();
+}
+
+async function editZona(id) {
+    const z = (await loadData('zona')).find(x => x.id===id);
+    if (!z) return;
+    document.getElementById('zona_nama').value      = z.nama;
+    document.getElementById('zona_jenis').value     = z.jenis;
+    document.getElementById('zona_parent').value    = z.parentId||'';
+    document.getElementById('zona_koordinat').value = JSON.stringify(z.koordinat);
+    switchTab('zona');
+}
+
+// ============================================================
+// HISTORY
+// ============================================================
+async function exportHistory() {
+    const hist = await loadData('history');
+    const a = document.createElement('a');
+    a.href     = URL.createObjectURL(new Blob([JSON.stringify(hist,null,2)],{type:'application/json'}));
+    a.download = `history_${Date.now()}.json`;
+    a.click();
+}
+
+async function clearHistory() {
+    if (!confirm('Hapus semua riwayat history?')) return;
+    const tx = db.transaction('history','readwrite');
+    tx.objectStore('history').clear();
+    await new Promise(r => tx.oncomplete = r);
+    refreshSidebar();
+}
+
+// ============================================================
+// APP — EXPORT / IMPORT / RESET / INIT
+// ============================================================
+async function exportData() {
+    const data = {
+        bangunan  : await loadData('bangunan'),
+        jalan     : await loadData('jalan'),
+        zona      : await loadData('zona'),
+        exportTime: new Date().toISOString()
+    };
+    const a = document.createElement('a');
+    a.href     = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+    a.download = `sig_kampus_${Date.now()}.json`;
+    a.click();
+}
+
+async function importData() {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'application/json';
+    inp.onchange = async (e) => {
+        try {
+            const data = JSON.parse(await e.target.files[0].text());
+            if (data.bangunan) await saveData('bangunan', data.bangunan);
+            if (data.jalan)    await saveData('jalan',    data.jalan);
+            if (data.zona)     await saveData('zona',     data.zona);
+            await addHistory('IMPORT','System','Import data dari file JSON');
+            renderMap();
+        } catch(err) { alert('File tidak valid: '+err.message); }
+    };
+    inp.click();
+}
+
+async function resetToDefault() {
+    if (!confirm('Reset semua data ke default? Semua perubahan akan hilang.')) return;
+    await saveData('bangunan', DEFAULT_DATA.bangunan);
+    await saveData('jalan',    DEFAULT_DATA.jalan);
+    await saveData('zona',     DEFAULT_DATA.zona);
+    await addHistory('RESET','System','Reset ke default');
+    renderMap();
+}
+
+async function init() {
+    await initDB();
+    const existing = await loadData('bangunan');
+    if (existing.length === 0) {
+        await saveData('bangunan', DEFAULT_DATA.bangunan);
+        await saveData('jalan',    DEFAULT_DATA.jalan);
+        await saveData('zona',     DEFAULT_DATA.zona);
+    }
+    initMap();
+    await renderMap();
+}
+
+init();
 </script>
 </body>
 </html>
